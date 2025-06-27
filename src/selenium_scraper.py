@@ -46,7 +46,7 @@ def extract_current_week(driver):
         menus.append({
             "Date": current_date,
             "Type": meal_type,
-            "Menu": " ".join(menu_items)
+            "Menu": ", ".join(menu_items)
         })
     return menus 
 
