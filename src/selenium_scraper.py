@@ -37,11 +37,13 @@ def extract_current_week(driver):
 
         meal_type = cells[0].get_text(strip=True)
         menu_html = cells[1].decode_contents()
-        menu_items = [
-            item.strip()
-            for item in menu_html.split("<br>")
-            if item.strip()
-        ]
+        # menu_items = [
+        #     item.strip()
+        #     for item in menu_html.split("<br>")
+        #     if item.strip()
+        # ]
+        menu_items = list(cells[1].stripped_strings) # test to get better formatting of menu items
+
 
         menus.append({
             "Date": current_date,
