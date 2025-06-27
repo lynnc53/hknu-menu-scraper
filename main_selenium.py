@@ -1,6 +1,6 @@
 import pandas as pd 
 from src.selenium_scraper import get_driver, extract_current_week, click_previous_week
-
+# note: change max_weeks if you want to scrape more than 10 weeks
 def crawl_all_weeks(max_weeks = 10):
     driver = get_driver()
     driver.get("https://www.hknu.ac.kr/kor/670/subview.do?enc=Zm5jdDF8QEB8JTJGZGlldCUyRmtvciUyRjIlMkZ2aWV3LmRvJTNGbW9uZGF5JTNEMjAyNS4wNi4yMyUyNndlZWslM0RwcmUlMjY%3D")
