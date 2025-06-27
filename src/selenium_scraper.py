@@ -25,25 +25,29 @@ def extract_current_week(driver):
     current_date = ""
 
     for row in rows:
-        # First check if this row has a <th> with the date
-        header_cell = row.find("th")
-        if header_cell:
-            current_date = header_cell.get_text(strip=True)
-            continue  # skip this row, it's just a date marker
+        # Update date if <th> exists in this row
+        date_cell = row.find("th")
+        if date_cell:
+            current_date = date_cell.get_text(strip=True)
 
+        # Get all <td> elements
         cells = row.find_all("td")
-        if len(cells) == 2:
-            meal_type = cells[0].get_text(strip=True)
-            menu_items = [
-                item.strip()
-                for item in cells[1].decode_contents().split("<br>")
-                if item.strip()
-            ]
-            menus.append({
-                "Date": current_date,
-                "Type": meal_type,
-                "Menu": " ".join(menu_items)
-            })
+        if len(cells) != 2:
+            continue  # Skip malformed rows
+
+        meal_type = cells[0].get_text(strip=True)
+        menu_html = cells[1].decode_contents()
+        menu_items = [
+            item.strip()
+            for item in menu_html.split("<br>")
+            if item.strip()
+        ]
+
+        menus.append({
+            "Date": current_date,
+            "Type": meal_type,
+            "Menu": " ".join(menu_items)
+        })
     return menus 
 
 # this function clicks the "next week" button to navigate to the next week's menu
