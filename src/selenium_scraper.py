@@ -8,56 +8,50 @@ from selenium.webdriver.support import expected_conditions as EC # expected cond
 from bs4 import BeautifulSoup
 import time
 
-# function to initialize selenium webdriver
-# This function sets up the Chrome WebDriver with options for headless operation and GPU acceleration disabled
 def get_driver():
     options = Options()
-    options.add_argument("--headless")  # Run in headless mode
-    options.add_argument("--disable-gpu")  # Disable GPU acceleration
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")  
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver 
 
 def extract_current_week(driver):
     soup = BeautifulSoup(driver.page_source, "html.parser")
     rows = soup.select("tr")
-    # select all table rows from the HTML page 
-
-    menus = []
+    yummy_menus = []
+    healthy_menus = []
     current_date = ""
 
     for row in rows:
-        # Update date if <th> exists in this row
         date_cell = row.find("th")
         if date_cell:
             current_date = date_cell.get_text(strip=True)
-
-        # Get all <td> elements
+        
         cells = row.find_all("td")
         if len(cells) != 2:
-            continue  # Skip malformed rows
+            continue 
 
-        meal_type = cells[0].get_text(strip=True) # strip=True removes whitespace
-        # cells[0] refers to the first <td> containing simple text         
-        menu_items = list(cells[1].stripped_strings) # gets only the menu items by [1] index
-        # stripped_strings removes extra whitespace and newlines
-        # cells[1] refers to the second <td> containing HTML content with line breaks  
+        meal_type = cells[0].get_text(strip=True)
+        menu_items = cells[1].get_text(strip=True)
 
-        menus.append({
+        entry = {
             "Date": current_date,
-            "Type": meal_type,
-            "Menu": ", ".join(menu_items)
-        })
-    return menus 
+            "Meal Type": meal_type,
+            "Menu Items": menu_items
+        }
+        if meal_type == "맛난한끼(11:30~13:30)":
+            yummy_menus.append(entry)
+        elif meal_type == "건강한끼(11:30~13:30)":
+            healthy_menus.append(entry)
+    return yummy_menus, healthy_menus
 
-# this function clicks the "next week" button to navigate to the next week's menu
 def click_previous_week(driver):
     try:
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver,10)
         button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a._termLeft")))
-        # element_to_be_clickable waits until the button is clickable/visable 
         button.click()
         time.sleep(1.5)
     except Exception as e:
-        print("No previous week button found:", e)
+        print(f"Error clicking previous week button: {e}")
         return False
-    return True
+    return True             
