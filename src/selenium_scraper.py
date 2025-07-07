@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC # expected conditions for waiting for elements to load
 from bs4 import BeautifulSoup
 import time
+import re 
 
 def get_driver():
     options = Options()
@@ -21,18 +22,31 @@ def extract_current_week(driver):
     yummy_menus = []
     healthy_menus = []
     current_date = ""
+    seen_entries = set()  # to track seen entries and avoid duplicates
 
     for row in rows:
         date_cell = row.find("th")
         if date_cell:
-            current_date = date_cell.get_text(strip=True)
-        
+            text = date_cell.get_text(strip=True)
+            match = re.search(r'\(\s*([월화수목금토일])\s*\)', text)
+            if match:
+                weekday = match.group(1)
+                if weekday in ["토", "일"]:
+                    continue  # skip Sat & Sun
+                current_date = text
+
         cells = row.find_all("td")
         if len(cells) != 2:
             continue 
 
         meal_type = cells[0].get_text(strip=True)
         menu_items = cells[1].get_text(strip=False).replace("\n", ", ").strip()
+
+        # remove duplicates 
+        entry_key = (current_date, meal_type)
+        if entry_key in seen_entries:
+            continue # skip duplicates 
+        seen_entries.add(entry_key)
 
         entry = {
             "Date": current_date,
@@ -43,7 +57,6 @@ def extract_current_week(driver):
             yummy_menus.append(entry)
         elif meal_type == "건강한끼(11:30~13:30)":
             healthy_menus.append(entry)
-    print(yummy_menus)
     return yummy_menus, healthy_menus
 
 
