@@ -1,5 +1,7 @@
 import pandas as pd 
 from src.selenium_scraper import get_driver, extract_current_week, click_previous_week
+from merge import merge_menus_and_weather
+from src.add_quantity import add_quantity_to_menus
 # note: change max_weeks if you want to scrape more than 10 weeks
 # def crawl_all_weeks(max_weeks = 10):
 #     driver = get_driver() # function to initialize the selenium  webdriver 
@@ -20,7 +22,7 @@ from src.selenium_scraper import get_driver, extract_current_week, click_previou
 #     df.to_csv("data/hknu_menus.csv", index=False)
 #     print("Scraping complete!")
 
-def crawl_all_weeks(max_weeks=15):
+def crawl_all_weeks(max_weeks=10):
     driver = get_driver()
     driver.get("https://www.hknu.ac.kr/kor/670/subview.do?enc=Zm5jdDF8QEB8JTJGZGlldCUyRmtvciUyRjIlMkZ2aWV3LmRvJTNGbW9uZGF5JTNEMjAyNS4wNi4yMyUyNndlZWslM0RwcmUlMjY%3D")
     all_yummy_menus = []
@@ -40,9 +42,19 @@ def crawl_all_weeks(max_weeks=15):
     df = pd.DataFrame(all_yummy_menus)
     df.to_csv("data/hknu_yummy_menus.csv", index=False)
     print("Yummy menus scraping complete!")
+
     df = pd.DataFrame(all_healthy_menus)
     df.to_csv("data/hknu_healthy_menus.csv", index=False)
     print("Healthy menus scraping complete!")
+
+    df_merged_yummy, df_merged_healthy = merge_menus_and_weather()
+    df_merged_yummy.to_csv("data/hknu_merged_yummy_menus.csv", index=False)
+    df_merged_healthy.to_csv("data/hknu_merged_healthy_menus.csv", index=False)
+
+    df_yummy, df_healthy = add_quantity_to_menus()
+    df_yummy.to_csv("data/hknu_yummy_menus_with_quantity.csv", index=False)
+    df_healthy.to_csv("data/hknu_healthy_menus_with_quantity.csv", index=False)
+
 
 if __name__ == "__main__":  
     crawl_all_weeks()
