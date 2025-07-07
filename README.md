@@ -11,7 +11,7 @@ cd hknu-menu-scraper
 ```bash
 python main_selenium.py
 ```
-This will scrape up to 10 weeks of menu data by default and save it in the data/hknu_menus.csv file
+This will scrape up to 10 weeks of menu data by default as well as add weather and student count data into hknu_healthy_menus_with_quantity.py and hknu_yummy_menus_with_quantity.py (inside data folder)
 
 ## 3. Optional: Scrape More Weeks
 By default, the scraper goes back to only 10 weeks.
