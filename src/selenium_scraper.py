@@ -41,6 +41,7 @@ def extract_current_week(driver):
 
         meal_type = cells[0].get_text(strip=True)
         menu_items = cells[1].get_text(strip=False).replace("\n", ", ").strip()
+        main_menu = menu_items.split(" ")[0] if menu_items else "" # extract the first item as the main menu
 
         # remove duplicates 
         entry_key = (current_date, meal_type)
@@ -51,7 +52,8 @@ def extract_current_week(driver):
         entry = {
             "Date": current_date,
             "Meal Type": meal_type,
-            "Menu Items": menu_items
+            "Menu Items": menu_items,
+            "Main Menu": main_menu
         }
         if meal_type == "맛난한끼(11:30~13:30)":
             yummy_menus.append(entry)
