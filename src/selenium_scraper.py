@@ -32,7 +32,7 @@ def extract_current_week(driver):
             continue 
 
         meal_type = cells[0].get_text(strip=True)
-        menu_items = cells[1].get_text(strip=True)
+        menu_items = cells[1].get_text(strip=False).replace("\n", ", ").strip()
 
         entry = {
             "Date": current_date,
@@ -43,7 +43,9 @@ def extract_current_week(driver):
             yummy_menus.append(entry)
         elif meal_type == "건강한끼(11:30~13:30)":
             healthy_menus.append(entry)
+    print(yummy_menus)
     return yummy_menus, healthy_menus
+
 
 def click_previous_week(driver):
     try:
