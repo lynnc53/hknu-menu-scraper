@@ -40,7 +40,7 @@ def extract_current_week(driver):
             continue 
 
         meal_type = cells[0].get_text(strip=True)
-        menu_items = cells[1].get_text(strip=False).replace("\n", ", ").strip()
+        menu_items = cells[1].get_text(strip=False).replace("\n", ",").strip()
         main_menu = menu_items.split(" ")[0] if menu_items else "" # extract the first item as the main menu
 
         # remove duplicates 
