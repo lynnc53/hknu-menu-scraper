@@ -1,7 +1,8 @@
 import pandas as pd 
-from src.selenium_scraper import get_driver, extract_current_week, click_previous_week
+from src.selenium_scraper import get_driver, extract_current_week, click_previous_week, extract_exam_schedule
 from merge import merge_menus_and_weather
 from src.add_quantity import add_quantity_to_menus
+from src.clean_df import clean_df
 # note: change max_weeks if you want to scrape more than 10 weeks
 # def crawl_all_weeks(max_weeks = 10):
 #     driver = get_driver() # function to initialize the selenium  webdriver 
@@ -55,8 +56,25 @@ def crawl_all_weeks(max_weeks=10):
     df_yummy.to_csv("data/hknu_yummy_menus_with_quantity.csv", index=False)
     df_healthy.to_csv("data/hknu_healthy_menus_with_quantity.csv", index=False)
 
+def crawl_schedule(max_weeks=10):
+    print("Crawling schedule...")
+    driver = get_driver()
+    driver.get("https://www.hknu.ac.kr/kor/646/subview.do")
+    
+    exam_schedule = []
+    for _ in range(max_weeks):
+        exam_schedule.extend(extract_exam_schedule(driver))
+    driver.quit()
+    df = pd.DataFrame(exam_schedule)
+    df.to_csv("data/hknu_exam_schedule.csv", index=False)
+    print("Schedule crawling complete!")
+
+    df_healthy_cleaned, df_yummy_cleaned = clean_df()
+    df_healthy_cleaned.to_csv("data/cleaned/hknu_healthy_menus_cleaned.csv", index=False)
+    df_yummy_cleaned.to_csv("data/cleaned/hknu_yummy_menus_cleaned.csv", index=False)
 
 if __name__ == "__main__":  
-    crawl_all_weeks()
+    #crawl_all_weeks()
+    crawl_schedule()
 
     
