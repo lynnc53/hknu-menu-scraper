@@ -27,20 +27,24 @@ def clean_df():
     df_yummy_cleaned['강수량'] = df_yummy['Precipitation']
     df_yummy_cleaned['식수량'] = df_yummy['StudentCount']
 
-    # 시험기간 여부 creation
-    # Ensure exam schedule dates are datetime.date
+    # 1. Ensure exam schedule dates are datetime.date
     df_schedule['Date'] = pd.to_datetime(df_schedule['Date']).dt.date
 
-    # Make a dictionary for fast lookup: {date: content}
-    exam_dict = dict(zip(df_schedule['Date'], df_schedule['Content']))
+    # 2. Mark '예' if "시험" is in the content
+    df_schedule['시험여부'] = df_schedule['Content'].apply(lambda x: '예' if "시험" in x else '아니오')
 
-    # Define function to check for "시험"
+    # 3. Create a dictionary {date: '예' or '아니오'} for fast lookup
+    exam_dict = dict(zip(df_schedule['Date'], df_schedule['시험여부']))
+    print(exam_dict)
+
+    # 4. Function to lookup 시험여부 based on date
     def check_exam(date):
-        content = exam_dict.get(date, "")
-        return "예" if "시험" in content else "아니오"
+        date = pd.to_datetime(date).date()  # Ensure date type matches
+        return exam_dict.get(date, '아니오')  # default to '아니오' if not found
 
-    # Apply the function
+    # 5. Apply to both healthy and yummy DataFrames
     df_healthy_cleaned['시험기간 여부'] = df_healthy_cleaned['날짜'].apply(check_exam)
     df_yummy_cleaned['시험기간 여부'] = df_yummy_cleaned['날짜'].apply(check_exam)
+
 
     return df_healthy_cleaned, df_yummy_cleaned
