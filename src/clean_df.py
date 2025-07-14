@@ -27,16 +27,39 @@ def clean_df():
     df_yummy_cleaned['강수량'] = df_yummy['Precipitation']
     df_yummy_cleaned['식수량'] = df_yummy['StudentCount']
 
-    # 1. Ensure exam schedule dates are datetime.date
+    # order dates 
+    df_healthy_cleaned.sort_values(by='날짜', ascending=True, inplace=True)
+    df_yummy_cleaned.sort_values(by='날짜', ascending=True, inplace=True)
+
+    # 1. Ensure 'Date' is datetime.date
     df_schedule['Date'] = pd.to_datetime(df_schedule['Date']).dt.date
 
-    # 2. Mark '예' if "시험" is in the content
-    df_schedule['시험여부'] = df_schedule['Content'].apply(lambda x: '예' if "시험" in x else '아니오')
+    # 2. Initialize 시험여부 column
+    df_schedule['시험여부'] = '아니오'
 
-    # 3. Create a dictionary {date: '예' or '아니오'} for fast lookup
+    # 3. Build a set for quick existence check and a list to store new rows
+    existing_dates = set(df_schedule['Date'])
+    new_rows = []
+
+    for index, row in df_schedule.iterrows():
+        exam_date = row['Date']
+        if "시험" in row['Content']:
+            for i in range(7):  # current + next 6 days
+                future_date = exam_date + pd.Timedelta(days=i)
+                if future_date in existing_dates:
+                    # Update 시험여부 if date exists
+                    df_schedule.loc[df_schedule['Date'] == future_date, '시험여부'] = '예'
+                else:
+                    # Add new row
+                    new_rows.append({'Date': future_date, 'Content': '', '시험여부': '예'})
+                    existing_dates.add(future_date)
+
+    # 4. Append new rows if any
+    if new_rows:
+        df_schedule = pd.concat([df_schedule, pd.DataFrame(new_rows)], ignore_index=True)
+
+    # 5. Recreate lookup dictionary
     exam_dict = dict(zip(df_schedule['Date'], df_schedule['시험여부']))
-    print(exam_dict)
-
     # 4. Function to lookup 시험여부 based on date
     def check_exam(date):
         date = pd.to_datetime(date).date()  # Ensure date type matches
