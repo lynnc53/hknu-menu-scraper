@@ -23,7 +23,7 @@ from src.clean_df import clean_df
 #     df.to_csv("data/hknu_menus.csv", index=False)
 #     print("Scraping complete!")
 
-def crawl_all_weeks(max_weeks=30):
+def crawl_all_weeks(max_weeks=24):
     driver = get_driver()
     driver.get("https://www.hknu.ac.kr/kor/670/subview.do?enc=Zm5jdDF8QEB8JTJGZGlldCUyRmtvciUyRjIlMkZ2aWV3LmRvJTNGbW9uZGF5JTNEMjAyNS4wNi4yMyUyNndlZWslM0RwcmUlMjY%3D")
     all_yummy_menus = []
@@ -56,7 +56,7 @@ def crawl_all_weeks(max_weeks=30):
     df_yummy.to_csv("data/hknu_yummy_menus_with_quantity.csv", index=False)
     df_healthy.to_csv("data/hknu_healthy_menus_with_quantity.csv", index=False)
 
-def crawl_schedule(max_weeks=30):
+def crawl_schedule(max_weeks=24):
     print("Crawling schedule...")
     driver = get_driver()
     driver.get("https://www.hknu.ac.kr/kor/646/subview.do")
