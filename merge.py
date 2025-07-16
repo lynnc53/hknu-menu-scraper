@@ -4,7 +4,7 @@ import re
 def merge_menus_and_weather():
     yummy_menus = pd.read_csv("data/hknu_yummy_menus.csv")
     healthy_menus = pd.read_csv("data/hknu_healthy_menus.csv")
-    weather = pd.read_csv("data/hknu_weather.csv", encoding="euc-kr")
+    weather = pd.read_csv("data/hknu_weather.csv", encoding="utf-8")
 
     print(weather.head())
 
