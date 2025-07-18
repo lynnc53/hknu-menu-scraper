@@ -3,7 +3,7 @@ from src.selenium_scraper import get_driver, extract_current_week, click_previou
 from merge import merge_menus_and_weather
 from src.add_quantity import add_quantity_to_menus
 from src.clean_df import clean_df
-from src.visualize import plot_top10_menus
+from src.visualize import plot_top10_menus, plot_exam_vs_student_count
 # note: change max_weeks if you want to scrape more than 10 weeks
 # def crawl_all_weeks(max_weeks = 10):
 #     driver = get_driver() # function to initialize the selenium  webdriver 
@@ -75,8 +75,9 @@ def crawl_schedule(max_weeks=16):
     df_yummy_cleaned.to_csv("data/cleaned/hknu_yummy_menus_cleaned.csv", index=False)
 
 if __name__ == "__main__":  
-    crawl_all_weeks()
-    crawl_schedule()
-    plot_top10_menus()
+    # crawl_all_weeks()
+    # crawl_schedule()
+    # plot_top10_menus()
+    plot_exam_vs_student_count()
 
     

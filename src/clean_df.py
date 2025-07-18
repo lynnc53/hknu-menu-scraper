@@ -71,6 +71,6 @@ def clean_df():
 
     # remove all rows with '식수량' less than 10
     df_healthy_cleaned = df_healthy_cleaned[df_healthy_cleaned['식수량'] > 10]
-    df_yummy_cleaned = df_yummy_cleaned[df_yummy_cleaned['식수량'] > 10]
+    df_yummy_cleaned = df_yummy_cleaned[df_yummy_cleaned['식수량'] > 10] # this is to ensure we only keep rows with significant student counts
 
     return df_healthy_cleaned, df_yummy_cleaned
