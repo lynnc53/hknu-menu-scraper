@@ -75,8 +75,8 @@ def crawl_schedule(max_weeks=16):
     df_yummy_cleaned.to_csv("data/cleaned/hknu_yummy_menus_cleaned.csv", index=False)
 
 if __name__ == "__main__":  
-    #crawl_all_weeks()
-    #crawl_schedule()
+    crawl_all_weeks()
+    crawl_schedule()
     plot_top10_menus()
 
     

@@ -69,5 +69,8 @@ def clean_df():
     df_healthy_cleaned['시험기간 여부'] = df_healthy_cleaned['날짜'].apply(check_exam)
     df_yummy_cleaned['시험기간 여부'] = df_yummy_cleaned['날짜'].apply(check_exam)
 
+    # remove all rows with '식수량' less than 10
+    df_healthy_cleaned = df_healthy_cleaned[df_healthy_cleaned['식수량'] > 10]
+    df_yummy_cleaned = df_yummy_cleaned[df_yummy_cleaned['식수량'] > 10]
 
     return df_healthy_cleaned, df_yummy_cleaned
