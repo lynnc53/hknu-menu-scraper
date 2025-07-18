@@ -14,34 +14,55 @@ healthy = pd.read_csv("data/cleaned/hknu_healthy_menus_cleaned.csv")
 yummy = pd.read_csv("data/cleaned/hknu_yummy_menus_cleaned.csv")
 
 
-def plot_top10_menus():
-    # 1. 식수량 기준 Top 10개 메뉴 : 표 형식, 메뉴명, (맛난한끼/ 건강한끼)
-    # y-axis will be 식수량 
-    # x-axis will be top 10 메뉴명
+def plot_top10_menus_by_quantity():
+    # Remove unwanted menu entries
+    unwanted_menus = ['등록된 식단내용이(가) 없습니다.', '미운영']
+    healthy_filtered = healthy[~healthy['메뉴'].isin(unwanted_menus)]
+    yummy_filtered = yummy[~yummy['메뉴'].isin(unwanted_menus)]
 
-    healthy_top10 = healthy.nlargest(10, '식수량')
-    yummy_top10 = yummy.nlargest(10, '식수량')
-    #print("Healthy Top 10 Menus:\n", healthy_top10[['메뉴', '식수량']])
+    # Group by 메뉴 and calculate:
+    # - count (for sorting)
+    # - sum of 식수량 (for y-axis)
+    healthy_grouped = healthy_filtered.groupby('메뉴').agg({
+        '식수량': 'mean',
+        '메뉴': 'count'
+    }).rename(columns={'메뉴': '등장횟수'})
+
+    yummy_grouped = yummy_filtered.groupby('메뉴').agg({
+        '식수량': 'mean',
+        '메뉴': 'count'
+    }).rename(columns={'메뉴': '등장횟수'})
+
+    # Sort by 등장횟수 and pick top 10
+    top10_healthy = healthy_grouped.sort_values('등장횟수', ascending=False).head(10)
+    top10_yummy = yummy_grouped.sort_values('등장횟수', ascending=False).head(10)
+
     plt.figure(figsize=(12, 6))
 
-    # Plot for Healthy Menus
+    # Plot Healthy
     plt.subplot(1, 2, 1)
-    plt.bar(healthy_top10['메뉴'], healthy_top10['식수량'], color='green')
-    plt.title('Top 10 Healthy Menus by 식수량')
+    bars1 = plt.bar(top10_healthy.index, top10_healthy['식수량'], color='green')
+    plt.title('Top 10 Healthy Menus by 등장횟수 (Y: 총 식수량)')
     plt.xlabel('메뉴명')
-    plt.ylabel('식수량')
+    plt.ylabel('총 식수량')
     plt.xticks(rotation=45)
-    
-    # Plot for Yummy Menus
+    for bar in bars1:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width() / 2, yval + 1, f'{int(yval)}', ha='center', va='bottom')
+
+    # Plot Yummy
     plt.subplot(1, 2, 2)
-    plt.bar(yummy_top10['메뉴'], yummy_top10['식수량'], color='orange')
-    plt.title('Top 10 Yummy Menus by 식수량')
+    bars2 = plt.bar(top10_yummy.index, top10_yummy['식수량'], color='orange')
+    plt.title('Top 10 Yummy Menus by 등장횟수 (Y: 총 식수량)')
     plt.xlabel('메뉴명')
-    plt.ylabel('식수량')
+    plt.ylabel('총 식수량')
     plt.xticks(rotation=45)
-    
+    for bar in bars2:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width() / 2, yval + 1, f'{int(yval)}', ha='center', va='bottom')
+
     plt.tight_layout()
-    plt.savefig('data/visualization/top10_menus_.png')
+    plt.savefig('data/visualization/top10_menus_by_quantity.png')
     plt.show()
 
 # 2. 식단구분별 식수 인원 비교: 강수량(유-최대/ 최소, 무-최대/최소), 시험기간(유-최대/ 최소, 무-최대/최소)
