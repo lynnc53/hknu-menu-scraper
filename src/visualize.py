@@ -42,6 +42,7 @@ def plot_top10_menus():
     
     plt.tight_layout()
     plt.show()
+    plt.savefig('data/visualization/top10_menus_.png')
 
 # 2. 식단구분별 식수 인원 비교: 강수량(유-최대/ 최소, 무-최대/최소), 시험기간(유-최대/ 최소, 무-최대/최소)
 # two separate bar charts for 강수량 and 시험기간
