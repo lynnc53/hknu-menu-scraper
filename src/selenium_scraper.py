@@ -10,6 +10,7 @@ import time
 import re 
 import pandas as pd
 from datetime import datetime, timedelta
+from src.extract_main_menu import extract_main_menu
 
 def get_driver():
     options = Options()
@@ -43,8 +44,9 @@ def extract_current_week(driver):
 
         meal_type = cells[0].get_text(strip=True)
         menu_items = cells[1].get_text(strip=False).replace("\n", ", ").strip()
-        main_menu = menu_items.split(",")[0] if menu_items else "" # extract the first item as the main menu
-
+        # extract the first item as the main menu eiter separated by a comma or a bracket
+        # if the first item is 백미밥, then take the next item
+        main_menu = extract_main_menu(menu_items)
         # remove duplicates 
         entry_key = (current_date, meal_type)
         if entry_key in seen_entries:

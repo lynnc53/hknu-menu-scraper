@@ -77,8 +77,8 @@ def crawl_schedule(max_weeks=16):
 if __name__ == "__main__":  
     # crawl_all_weeks()
     # crawl_schedule()
-    # plot_top10_menus()
+    plot_top10_menus()
     # plot_exam_vs_student_count()
-    plot_rain_vs_student_count()
+    # plot_rain_vs_student_count()
 
     

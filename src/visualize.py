@@ -13,15 +13,15 @@ mpl.rcParams['axes.unicode_minus'] = False     # Fix minus sign issue
 healthy = pd.read_csv("data/cleaned/hknu_healthy_menus_cleaned.csv")
 yummy = pd.read_csv("data/cleaned/hknu_yummy_menus_cleaned.csv")
 
-# 1. 식수량 기준 Top 10개 메뉴 : 표 형식, 메뉴명, (맛난한끼/ 건강한끼)
-# y-axis will be 식수량 
-# x-axis will be top 10 메뉴명
-
-healthy_top10 = healthy.nlargest(10, '식수량')
-yummy_top10 = yummy.nlargest(10, '식수량')
-#print("Healthy Top 10 Menus:\n", healthy_top10[['메뉴', '식수량']])
 
 def plot_top10_menus():
+    # 1. 식수량 기준 Top 10개 메뉴 : 표 형식, 메뉴명, (맛난한끼/ 건강한끼)
+    # y-axis will be 식수량 
+    # x-axis will be top 10 메뉴명
+
+    healthy_top10 = healthy.nlargest(10, '식수량')
+    yummy_top10 = yummy.nlargest(10, '식수량')
+    #print("Healthy Top 10 Menus:\n", healthy_top10[['메뉴', '식수량']])
     plt.figure(figsize=(12, 6))
 
     # Plot for Healthy Menus
