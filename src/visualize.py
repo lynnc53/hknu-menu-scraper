@@ -117,17 +117,20 @@ def plot_rain_vs_student_count():
     # HEALTHY
     rain_yes_healthy = healthy[healthy['강수량'] > 0]
     rain_no_healthy = healthy[healthy['강수량'] == 0]
-
     rain_yes_avg_healthy = rain_yes_healthy['식수량'].mean()
     rain_no_avg_healthy = rain_no_healthy['식수량'].mean()
 
     plt.figure(figsize=(8, 5))
-    plt.bar('강수량 유', rain_yes_avg_healthy, color='blue', label='강수량 유')
-    plt.bar('강수량 무', rain_no_avg_healthy, color='red', label='강수량 무')
+    bars = plt.bar(['강수량 유', '강수량 무'], [rain_yes_avg_healthy, rain_no_avg_healthy],
+                   color=['blue', 'red'], label=['강수량 유', '강수량 무'])
+
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width() / 2, yval + 2, f'{yval:.1f}', ha='center', va='bottom')
+
     plt.title('건강한끼 평균 식수량: 강수량 유 vs 무')
     plt.xlabel('강수량 여부')
     plt.ylabel('평균 식수량')
-    plt.legend()
     plt.tight_layout()
     plt.savefig('data/visualization/rain_vs_student_count_healthy.png')
     plt.show()
@@ -135,17 +138,21 @@ def plot_rain_vs_student_count():
     # YUMMY
     rain_yes_yummy = yummy[yummy['강수량'] > 0]
     rain_no_yummy = yummy[yummy['강수량'] == 0]
-
     rain_yes_avg_yummy = rain_yes_yummy['식수량'].mean()
     rain_no_avg_yummy = rain_no_yummy['식수량'].mean()
 
     plt.figure(figsize=(8, 5))
-    plt.bar('강수량 유', rain_yes_avg_yummy, color='blue', label='강수량 유')
-    plt.bar('강수량 무', rain_no_avg_yummy, color='red', label='강수량 무')
+    bars = plt.bar(['강수량 유', '강수량 무'], [rain_yes_avg_yummy, rain_no_avg_yummy],
+                   color=['blue', 'red'], label=['강수량 유', '강수량 무'])
+
+    # logic to add value labels on top of bars 
+    for bar in bars:
+        yval = bar.get_height() # the actual value of the bar
+        plt.text(bar.get_x() + bar.get_width() / 2, yval + 2, f'{yval:.1f}', ha='center', va='bottom') # calculate horizontal position and vertical position of the text
+
     plt.title('맛난한끼 평균 식수량: 강수량 유 vs 무')
     plt.xlabel('강수량 여부')
     plt.ylabel('평균 식수량')
-    plt.legend()
     plt.tight_layout()
     plt.savefig('data/visualization/rain_vs_student_count_yummy.png')
     plt.show()

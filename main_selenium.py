@@ -79,6 +79,6 @@ if __name__ == "__main__":
     # crawl_schedule()
     plot_top10_menus()
     # plot_exam_vs_student_count()
-    # plot_rain_vs_student_count()
+    plot_rain_vs_student_count()
 
     
