@@ -104,4 +104,48 @@ def plot_exam_vs_student_count():
     plt.tight_layout()
     plt.savefig('data/visualization/exam_vs_student_count_yummy.png')
     plt.show()
+
+
 # 식수량 vs. 강수량
+def plot_rain_vs_student_count():
+    # Convert to numeric
+    healthy['식수량'] = pd.to_numeric(healthy['식수량'], errors='coerce')
+    yummy['식수량'] = pd.to_numeric(yummy['식수량'], errors='coerce')
+    healthy['강수량'] = pd.to_numeric(healthy['강수량'], errors='coerce')
+    yummy['강수량'] = pd.to_numeric(yummy['강수량'], errors='coerce')
+
+    # HEALTHY
+    rain_yes_healthy = healthy[healthy['강수량'] > 0]
+    rain_no_healthy = healthy[healthy['강수량'] == 0]
+
+    rain_yes_avg_healthy = rain_yes_healthy['식수량'].mean()
+    rain_no_avg_healthy = rain_no_healthy['식수량'].mean()
+
+    plt.figure(figsize=(8, 5))
+    plt.bar('강수량 유', rain_yes_avg_healthy, color='blue', label='강수량 유')
+    plt.bar('강수량 무', rain_no_avg_healthy, color='red', label='강수량 무')
+    plt.title('건강한끼 평균 식수량: 강수량 유 vs 무')
+    plt.xlabel('강수량 여부')
+    plt.ylabel('평균 식수량')
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig('data/visualization/rain_vs_student_count_healthy.png')
+    plt.show()
+
+    # YUMMY
+    rain_yes_yummy = yummy[yummy['강수량'] > 0]
+    rain_no_yummy = yummy[yummy['강수량'] == 0]
+
+    rain_yes_avg_yummy = rain_yes_yummy['식수량'].mean()
+    rain_no_avg_yummy = rain_no_yummy['식수량'].mean()
+
+    plt.figure(figsize=(8, 5))
+    plt.bar('강수량 유', rain_yes_avg_yummy, color='blue', label='강수량 유')
+    plt.bar('강수량 무', rain_no_avg_yummy, color='red', label='강수량 무')
+    plt.title('맛난한끼 평균 식수량: 강수량 유 vs 무')
+    plt.xlabel('강수량 여부')
+    plt.ylabel('평균 식수량')
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig('data/visualization/rain_vs_student_count_yummy.png')
+    plt.show()
