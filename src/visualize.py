@@ -34,7 +34,7 @@ def plot_top10_menus_by_quantity():
     }).rename(columns={'메뉴': '등장횟수'})
 
     # Sort by 등장횟수 and pick top 10
-    top10_healthy = healthy_grouped.sort_values('등장횟수', ascending=False).head(10)
+    top10_healthy = healthy_grouped.sort_values('등장횟수', ascending=False).head(10) # descending order 
     top10_yummy = yummy_grouped.sort_values('등장횟수', ascending=False).head(10)
 
     plt.figure(figsize=(12, 6))
@@ -42,9 +42,9 @@ def plot_top10_menus_by_quantity():
     # Plot Healthy
     plt.subplot(1, 2, 1)
     bars1 = plt.bar(top10_healthy.index, top10_healthy['식수량'], color='green')
-    plt.title('Top 10 Healthy Menus by 등장횟수 (Y: 총 식수량)')
+    plt.title('건강한끼 자주 등장한 메뉴 Top 10의 평균 식수량')
     plt.xlabel('메뉴명')
-    plt.ylabel('총 식수량')
+    plt.ylabel('평균 식수량')
     plt.xticks(rotation=45)
     for bar in bars1:
         yval = bar.get_height()
@@ -53,9 +53,9 @@ def plot_top10_menus_by_quantity():
     # Plot Yummy
     plt.subplot(1, 2, 2)
     bars2 = plt.bar(top10_yummy.index, top10_yummy['식수량'], color='orange')
-    plt.title('Top 10 Yummy Menus by 등장횟수 (Y: 총 식수량)')
+    plt.title('맛난한끼 자주 등장한 메뉴 Top 10의 평균 식수량')
     plt.xlabel('메뉴명')
-    plt.ylabel('총 식수량')
+    plt.ylabel('평균 식수량')
     plt.xticks(rotation=45)
     for bar in bars2:
         yval = bar.get_height()
