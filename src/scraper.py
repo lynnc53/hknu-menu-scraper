@@ -1,3 +1,4 @@
+# web scraping functions (Selenium + BeautifulSoup)()
 from selenium import webdriver
 from selenium.webdriver.common.by import By # for locating HTML elements
 from selenium.webdriver.chrome.service import Service 
@@ -10,7 +11,8 @@ import time
 import re 
 import pandas as pd
 from datetime import datetime, timedelta
-from src.extract_main_menu import extract_main_menu
+from src.utils import extract_exam_content, extract_main_menu
+
 
 def get_driver():
     options = Options()
@@ -18,6 +20,17 @@ def get_driver():
     options.add_argument("--disable-gpu")  
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver 
+
+def click_previous_week(driver):
+    try:
+        wait = WebDriverWait(driver,10)
+        button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a._termLeft")))
+        button.click()
+        time.sleep(1.5)
+    except Exception as e:
+        print(f"Error clicking previous week button: {e}")
+        return False
+    return True             
 
 def extract_current_week(driver):
     soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -71,56 +84,6 @@ def extract_exam_schedule(driver):
     date_tags = soup.select("p.list-date")
     content_tags = soup.select("p.list-content")
 
-    exam_schedule = []
-
-    for date_tag, content_tag in zip(date_tags, content_tags):
-        raw_date = date_tag.get_text(strip=True)
-        content_text = content_tag.get_text(strip=True)
-
-        # Check if it's a date range: MM.DD ~ MM.DD
-        match_range = re.search(r'(\d{2})[.-](\d{2}).*~.*(\d{2})[.-](\d{2})', raw_date)
-        if match_range:
-            start_month, start_day, end_month, end_day = match_range.groups()
-            start_date = datetime.strptime(f"2025-{start_month}-{start_day}", "%Y-%m-%d")
-            end_date = datetime.strptime(f"2025-{end_month}-{end_day}", "%Y-%m-%d")
-
-            current_date = start_date
-            while current_date <= end_date:
-                exam_schedule.append({
-                    "Date": current_date.date(),
-                    "Content": content_text
-                })
-                current_date += timedelta(days=1)
-        else:
-            # Single date case
-            match = re.search(r'(\d{2})[.-](\d{2})', raw_date)
-            if not match:
-                print(f"Skipping unrecognized date format: {raw_date}")
-                continue
-
-            month, day = match.groups()
-            date_str = f"2025-{month}-{day}"
-            try:
-                date_obj = pd.to_datetime(date_str)
-                if 3 <= date_obj.month <= 6:
-                    exam_schedule.append({
-                        "Date": date_obj.date(),
-                        "Content": content_text
-                    })
-            except Exception as e:
-                print(f"Failed to parse date '{date_str}': {e}")
-                continue
+    exam_schedule = extract_exam_content(date_tags, content_tags)
 
     return exam_schedule
-
-
-def click_previous_week(driver):
-    try:
-        wait = WebDriverWait(driver,10)
-        button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a._termLeft")))
-        button.click()
-        time.sleep(1.5)
-    except Exception as e:
-        print(f"Error clicking previous week button: {e}")
-        return False
-    return True             

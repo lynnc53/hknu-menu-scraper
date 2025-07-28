@@ -1,3 +1,4 @@
+# all graphing functions 
 import pandas as pd 
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -10,8 +11,8 @@ mpl.rcParams['font.family'] = 'Malgun Gothic'  # Windows
 mpl.rcParams['axes.unicode_minus'] = False     # Fix minus sign issue
 
 # import cleaned dataframes 
-healthy = pd.read_csv("data/cleaned/hknu_healthy_menus_cleaned.csv")
-yummy = pd.read_csv("data/cleaned/hknu_yummy_menus_cleaned.csv")
+healthy = pd.read_csv("data/cleaned/healthy_menus_cleaned.csv")
+yummy = pd.read_csv("data/cleaned/yummy_menus_cleaned.csv")
 
 
 def plot_top10_menus_by_quantity():
